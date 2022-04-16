@@ -1,8 +1,12 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:easy_migration/resources/auth_methods.dart';
 import 'package:easy_migration/screens/HomeScreen.dart';
 import 'package:easy_migration/screens/forgot.dart';
 import 'package:easy_migration/screens/signup.dart';
 import 'package:easy_migration/utils/global_variables.dart';
+import 'package:easy_migration/utils/movies.dart';
 import 'package:easy_migration/widgets/heading_label.dart';
 import 'package:easy_migration/widgets/label.dart';
 import 'package:easy_migration/widgets/text_field_input.dart';
@@ -11,6 +15,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -67,6 +72,14 @@ class _LoginScreenState extends State<LoginScreen> {
     return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
   }
 
+  Future<void> getTheMovies() async {
+    print("Im here");
+    var url = Uri.parse("https://imdb-api.com/en/API/Top250TVs/k_02gcehng");
+    Response res = await get(url);
+    Map<String, dynamic> body = jsonDecode(res.body);
+    log(body.toString());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,12 +91,11 @@ class _LoginScreenState extends State<LoginScreen> {
               padding:
                   EdgeInsets.only(top: MediaQuery.of(context).size.height / 5),
               child: SafeArea(
-                bottom: true,
+                bottom: false,
                 child: Container(
                     //child: Text("This is new widget"),
                     width: MediaQuery.of(context).size.width,
                     //height: MediaQuery.of(context).size.height,
-
                     decoration: const BoxDecoration(
                         //  color: Colors.white,
                         gradient: LinearGradient(
@@ -137,11 +149,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: largeheight / 4),
                         ElevatedButton(
                           onPressed: () {
-                            login();
+                            //login();
+                            getTheMovies();
                           },
                           child: const Text(
-                            "Login",
+                            //"Login",
+                            "Get top 250 movies",
                             style: TextStyle(
+                                color: Color.fromARGB(255, 184, 184, 184),
                                 fontFamily: 'Comfortaa',
                                 fontSize: 20.0,
                                 fontWeight: FontWeight.bold),
